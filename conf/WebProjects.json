@@ -3,5 +3,6 @@
   "DBFILE": "WebProjects.db",
   "BASEDIR": ".",
   "STATIC_ROOT": "static",
+  "TOKEN": "somerandomstring",
   "DEBUG": true
 }
