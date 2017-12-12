@@ -1,0 +1,62 @@
+{% load staticfiles %}
+
+{% include "projects/header.html" %}
+
+<div id="banner">
+  <div id="banner-content">
+    IPs en Neptuno
+  </div>
+</div>
+
+<div id="main-content">
+
+<p>
+  Ir a: <a href="{% url 'projects:project_index' %}">índice de proyectos</a>
+      | <a href="{% url 'projects:reservations' %}">reservas</a>
+</p>
+<p></p>
+
+<table class="widetable">
+    <tr>
+        <th># proyectos</th>
+        <th># IPs</th>
+        <th>Cuota total (TB)</th>
+    </tr>
+        <td>{{ nprojs }}</td>
+        <td>{{ nips }}</td>
+        <td>{{ tot_quota }}</td>
+    </tr>
+</table>
+
+<p></p>
+<p></p>
+
+<table class="widetable">
+    <tr>
+        <th>IP</th>
+        <th># proyectos
+            {% if show == "show" %}
+            <a href="{% url 'projects:index' %}">[ocultar]</a>
+            {% else %}
+            <a href="{% url 'projects:index' 'show' %}">[mostrar]</a>
+            {% endif %}
+        </th>
+        <th style="text-align:right">Cuota (GB)</th>
+    </tr>
+    {% for ip in ip_list %}
+    <tr class="{% cycle 'row1' 'row2' %}">
+        <td><a href="{% url 'projects:ip_detail' ip.id %}">{{ ip.ip_name }}</a></td>
+        <td>{{ ip.get_n_projs.0 }}</td>
+        <td style="text-align: right">{{ ip.get_quota_raw.0 }}</td>
+    </tr>
+        {% if show == "show" %}
+        {% for project in ip.get_open_projs %}
+        <tr class="enddate{{ project.is_expired }}">
+            <td></td>
+            <td><a href="{% url 'projects:detail' project.id %}">{{ project.name }}</a></td>
+            <td style="text-align: right">{{ project.get_quota }}</td>
+        </tr>
+        {% endfor %}
+        {% endif %}
+    {% endfor %}
+</table>

@@ -1,0 +1,13 @@
+{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'projects/style.css' %}" />
+
+<div id="banner404">
+  <div id="project-head">
+      404 - Página no encontrada
+  </div>
+</div>
+
+<div id="main-content">
+    <p><a href="{% url 'projects:index' %}">Volver al índice</a></p>
+</div>

@@ -1,0 +1,80 @@
+{% load staticfiles %}
+
+{% include "projects/header.html" %}
+
+<div id="banner">
+  <div id="banner-content">Proyectos en Neptuno</div>
+</div>
+
+<div id="main-content">
+
+{% if project_list %}
+
+<p>
+  <small>
+  Mostrar: 
+  {% if status == "expired" %}
+expirados | <a href="{% url 'projects:project_index' 'frozen' %}">en buffer</a> | <a href="{% url 'projects:project_index' 'open' %}">abiertos</a>| <a href="{% url 'projects:project_index' 'all' %}">todos</a>
+  {% elif status == "frozen" %}
+<a href="{% url 'projects:project_index' 'expired' %}">expirados</a> | en buffer | <a href="{% url 'projects:project_index' 'open' %}">abiertos</a>| <a href="{% url 'projects:project_index' 'all' %}">todos</a>
+  {% elif status == "all" %}
+<a href="{% url 'projects:project_index' 'expired' %}">expirados</a> | <a href="{% url 'projects:project_index' 'frozen' %}">en buffer</a> | <a href="{% url 'projects:project_index' 'open' %}">abiertos</a>| todos
+  {% else %}
+<a href="{% url 'projects:project_index' 'expired' %}">expirados</a> | <a href="{% url 'projects:project_index' 'frozen' %}">en buffer</a> | abiertos | <a href="{% url 'projects:project_index' 'all' %}">todos</a>
+  {% endif %}
+  | <a href="{% url 'projects:readme' %}">README</a>
+  | <a href="{% url 'projects:index' %}">índice de IPs</a>
+  </small>
+</p>
+<p></p>
+
+<table class="widetable">
+    <tr>
+        <th># proyectos</th>
+        <th># IPs</th>
+        <th>Cuota total (TB)</th>
+    </tr>
+        <td>{{ nprojs }}</td>
+        <td>{{ nips }}</td>
+        <td>{{ tot_quota }}</td>
+    </tr>
+</table>
+
+<p></p>
+
+<table class="widetable">
+    <tr>
+        <th>Proyecto</th>
+        <th>ID</th>
+        <th>Usuario</th>
+        <th>IP</th>
+        <th style="text-align:right">Cuota (GB)</th>
+        <th>Fecha inicio</th>
+        <th>Fecha fin</th>
+    </tr>
+    {% for project in project_list %}
+        {% if project.finished %}
+    <tr class="finished">
+        {% else %}
+    <tr class="{% cycle 'row1' 'row2' %}">
+        {% endif %}
+        <td><a href="{% url 'projects:detail' project.id %}">{{ project.name|truncatechars:40 }}</a></td>
+        <td>{{ project.proj_id }}</td>
+        <td>{{ project.user }}</td>
+        <td><a href="{% url 'projects:ip_detail' project.ip_id %}">{{ project.ip }}</a></td>
+        <td style="text-align: right">{{ project.get_quota }}</td>
+        <td>{{ project.get_start_str }}</td>
+        {% if project.finished %}
+            <td>{{ project.get_end_str }}</td>
+        {% else %}
+            <td class="enddate{{ project.is_expired }}">{{ project.get_end_str }}</td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+</table>
+
+{% else %}
+    <p>No projects are available.</p>
+{% endif %}
+
+</div>

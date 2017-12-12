@@ -1,0 +1,47 @@
+{% load staticfiles %}
+
+{% include "projects/header.html" %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.3/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<div id="banner" class="{{ project.get_status }}">
+  <div id="project-head">
+      Reservas de nodos
+  </div>
+</div>
+
+<div id="main-content">
+
+<a href="{% url 'projects:index' %}">Volver al índice</a>
+
+<div style="width: 75%; padding: 0 0; margin: auto auto;">
+    <canvas id="item_chart"></canvas>
+</div>
+
+<table>
+    <tr>
+        <th>Reserva</th>
+        <th>Fecha inicio</th>
+        <th>Fecha fin</th>
+        <th>Nodos</th>
+        <th>Días</th>
+        <th>Tamaño (nodos·día)</th>
+    </tr>
+    {% for reservation in reservation_list %}
+    <tr>
+        <td {{reservation.style|safe}} style="text-align: right">{{reservation.name}}</td>
+        <td {{reservation.style|safe}}>{{reservation.start|date:"Y-m-d H:i"}}</td>
+        <td {{reservation.style|safe}}>{{reservation.end|date:"Y-m-d H:i"}}</td>
+        <td {{reservation.style|safe}} style="text-align: right">{{reservation.nodes}}</td>
+        <td {{reservation.style|safe}} style="text-align: right">{{reservation.days|floatformat:1}}</td>
+        <td {{reservation.style|safe}} style="text-align: right">{{reservation.size|floatformat:1}}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<meta id="data-url" data-name="{% url 'projects:reservation_plot_data' %}">
+
+<script src="{% static "projects/js/reservation_chart.js" %}"></script>
+

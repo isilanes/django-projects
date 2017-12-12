@@ -1,0 +1,17 @@
+{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'projects/style.css' %}" />
+
+<div id="banner">
+  <div id="banner-content">
+      README
+  </div>
+</div>
+
+<div id="main-content">
+
+<h1>First section of README</h1>
+
+<p>blah blah blah</p>
+
+</div>

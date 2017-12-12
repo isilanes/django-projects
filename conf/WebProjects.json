@@ -1,0 +1,7 @@
+{
+  "SECRET_KEY": "heho-heho",
+  "DBFILE": "WebProjects.db",
+  "BASEDIR": ".",
+  "STATIC_ROOT": "static",
+  "DEBUG": true
+}

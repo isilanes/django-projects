@@ -1,0 +1,20 @@
+# Local port where web will be served:
+PORT=8081
+
+# Get local db:
+LOCALDB=$1
+if [[ "x$LOCALDB" == "x" ]]; then
+    echo No local db given!
+    exit
+fi
+
+if [[ ! -f $LOCALDB ]]; then
+    echo Local db $LOCALDB does not exist!
+    exit
+fi
+
+# Get git tag automatically:
+TAG=$(git branch --color=never | awk '/\*/{print $2}')
+
+# Do run:
+docker run -v $LOCALDB:/srv/WebProjects/WebProjects.db:rw --publish=$PORT:8000 isilanes/webprojects:$TAG

@@ -1,0 +1,74 @@
+{% load staticfiles %}
+
+{% include "projects/header.html" %}
+
+<div id="banner">
+  <div id="project-head">
+      IP: {{ ip.ip_name }}
+  </div>
+</div>
+
+<div id="main-content">
+
+<p><a href="{% url 'projects:index' %}">Volver al índice</a></p>
+<p></p>
+
+<table>
+    <tr>
+        <td></td>
+        <th colspan=1 style="text-align: center">Vigentes</th>
+        <th colspan=1 style="text-align: center">Totales</th>
+    </tr>
+    <tr>
+        <th>Número de Proyectos:</th>
+        <td style="text-align: right">{{ ip.get_n_projs.0 }}</td>
+        <td style="text-align: right">{{ ip.get_n_projs.1 }}</td>
+    </tr>
+    <tr>
+        <th>Uso de CPU (core·h):</th>
+        <td style="text-align: right">{{ ip.get_cpuh.0 }}</td>
+        <td style="text-align: right">{{ ip.get_cpuh.1 }}</td>
+    </tr>
+    <tr>
+        <th>Cuota de disco (GB):</th>
+        <td style="text-align: right">{{ ip.get_quota.0 }}</td>
+        <td style="text-align: right">{{ ip.get_quota.1 }}</td>
+    </tr>
+    <tr>
+        <th>Uso de disco (GB·d&iacute;a):</th>
+        <td style="text-align: right">{{ ip.get_disk_usage.0 }}</td>
+        <td style="text-align: right">{{ ip.get_disk_usage.1 }}</td>
+    </tr>
+</table>
+
+<p></p>
+<p></p>
+
+<table>
+    <tr>
+        <th>Projecto</th>
+        <th>PID</th>
+        <th>Usuario</th>
+        <th>Inicio</th>
+        <th>Fin</th>
+        {% comment %}
+        <th>Uso de CPU (core·h)</th>
+        <th>Uso de disco (GB·día)</th>
+        {% endcomment %}
+        <th>Estado</th>
+    </tr>
+    {% for proj in ip.project_set.all %}
+    <tr class="period_row_{{ period.4 }}">
+        <td><a href="{% url 'projects:detail' proj.id %}">{{ proj.name|truncatechars:45 }}</a></td>
+        <td>{{ proj.proj_id }}</td>
+        <td>{{ proj.user }}</td>
+        <td>{{ proj.get_start_str }}</td>
+        <td>{{ proj.get_end_str }}</td>
+        {% comment %}
+        <td style="text-align: right">{{ proj.cpuh|floatformat:0 }}</td>
+        <td style="text-align: right">{{ proj.get_disk_usage|floatformat:0 }}</td>
+        {% endcomment %}
+        <td class="{{ proj.get_status }}"> {{ proj.get_status }}</td>
+    </tr>
+    {% endfor %}
+</table>
