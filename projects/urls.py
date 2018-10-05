@@ -11,7 +11,9 @@ app_name = "projects"
 
 # Register converters:
 register_converter(converters.GeneralName, 'ip_name')
-register_converter(converters.GeneralName, 'account_name')
+register_converter(converters.GeneralName, 'acc_name')
+register_converter(converters.DateStamp, 'tstamp')
+register_converter(converters.NameWithSpaces, 'sname')
 
 
 # URL patterns:
@@ -34,10 +36,11 @@ urlpatterns = [
 
     # Data:
     path('disk_accounting/<int:year>/<int:month>', views.disk_accounting, name='disk_accounting'),
-    path('account_exists/<account_name:account>', views.account_exists, name='account_exists'),
+    path('account_exists/<acc_name:account>', views.account_exists, name='account_exists'),
     path('ip_exists/<ip_name:name>', views.ip_exists, name='ip_exists'),
     path('reservation_plot_data', views.reservation_plot_data, name='reservation_plot_data'),
 
     # Actions:
-    ###url(r'^create_account/(?P<token>\w+)/(?P<ip>[\w ]+)/(?P<end>\d{12})/(?P<title>[\w ]+)/(?P<account>\w+)/(?P<id>[\w\d-]+)/(?P<quota>\d+)/$', views.create_account, name='create_account'),
+    path('create_account/<slug:token>/<sname:ip>/<tstamp:end>/<sname:title>/<acc_name:account>/<slug:id>/<int:quota>',
+         views.create_account, name='create_account'),
 ]
