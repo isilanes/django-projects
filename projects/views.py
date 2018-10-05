@@ -1,5 +1,4 @@
 # Standard libs:
-import os
 import pytz
 from datetime import datetime, timedelta
 
@@ -12,8 +11,9 @@ from django.http import JsonResponse
 from WebProjects import settings
 from projects.models import Project, IP, Reservation, Period
 
+
 # Indices:
-def index(request, showprojs="noshow"):
+def index(request, show_projs="noshow"):
     project_list = Project.objects.filter(finished=False).order_by('id')
     ip_list = set([x.ip for x in project_list])
 
@@ -24,7 +24,7 @@ def index(request, showprojs="noshow"):
     dsu.sort()
     dsu.reverse()
 
-    ip_list = [z for x,y,z in dsu]
+    ip_list = [z for x, y, z in dsu]
 
     quotas = [x.get_quota() for x in project_list]
     tot_quota = '{0:.2f}'.format(sum(quotas)/1000.0)
@@ -35,10 +35,11 @@ def index(request, showprojs="noshow"):
         'nips': len(ip_list),
         'tot_quota': tot_quota,
         'ip_list': ip_list,
-        'show': showprojs,
+        'show': show_projs,
     }
     
     return render(request, 'projects/index.html', context)
+
 
 def project_index(request, status="open"):
     """Show a list of project in diferent states."""
@@ -49,22 +50,20 @@ def project_index(request, status="open"):
         dsu = sorted(dsu, reverse=True)
         project_list = [y for x,y in dsu]
     elif status == 'frozen':
-        project_list = []
         dsu = []
-        for p in  Project.objects.order_by('id'):
+        for p in Project.objects.order_by('id'):
             if p.in_buffer:
                 dsu.append([p.how_long_ago_expired, p])
         dsu.sort()
         dsu.reverse()
-        project_list = [ y for x,y in dsu ]
+        project_list = [y for x, y in dsu]
     elif status == 'all':
         project_list = Project.objects.order_by('id')
-    else: # abiertos
+    else:  # abiertos
         project_list = Project.objects.filter(finished=False).filter(in_buffer=False).order_by("id")
 
-    ips = set([ x.ip.ip_name for x in project_list ])
-
-    quotas = [ x.get_quota() for x in project_list ]
+    ips = set([x.ip.ip_name for x in project_list])
+    quotas = [x.get_quota() for x in project_list]
     tot_quota = '{0:.2f}'.format(sum(quotas)/1000.0)
     
     context = {
@@ -93,6 +92,7 @@ def detail(request, project_id=None):
 
     return render(request, 'projects/detail.html', context)
 
+
 def ip_detail(request, ip_id=None):
     ip = IP.objects.get(pk=ip_id)
 
@@ -108,6 +108,7 @@ def readme(request):
     context = {}
 
     return render(request, 'projects/README', context)
+
 
 def reservations(request):
     """Show view for Reservations."""
@@ -160,6 +161,7 @@ def disk_accounting(request, year, month):
 
     return JsonResponse(data)
 
+
 def reservation_plot_data(request):
     """Return JSON with reservation data to be plotted."""
 
@@ -171,6 +173,7 @@ def reservation_plot_data(request):
     }
 
     return JsonResponse(data)
+
 
 def account_exists(request, account):
     """Return whether or not account named 'account' exists."""
@@ -186,6 +189,7 @@ def account_exists(request, account):
     }
 
     return JsonResponse(data)
+
 
 def ip_exists(request, name):
     """Use 'name' name fragment to find a single IP (investigador principal)
@@ -214,26 +218,25 @@ def create_account(request, token, ip, end, title, account, id, quota):
     proj_ip = get_ip(ip)
 
     # Starting and ending dates:
-    #start_date, end_date = generate_period(opts.start_date, opts.end_date)
     tz = pytz.timezone("Europe/Madrid")
     start_date = datetime.now(tz)
     end_date = datetime.strptime(end, "%Y%m%d%H%M")
     end_date = timezone.make_aware(end_date, timezone=tz)
 
     # Create Project object:
-    P = Project(ip = proj_ip,
-                name = title,
-                user = account,
-                proj_id = id.replace("-", "/"))
-    P.save()
+    project = Project(ip=proj_ip,
+                      name=title,
+                      user=account,
+                      proj_id=id.replace("-", "/"))
+    project.save()
 
     # Create Period object:
-    Pe = Period(proj = P,
-                start = start_date,
-                end = end_date,
-                quota = quota,
-                status = "active")
-    Pe.save()
+    period = Period(proj=project,
+                    start=start_date,
+                    end=end_date,
+                    quota=quota,
+                    status="active")
+    period.save()
 
     # Success:
     return JsonResponse({"response": True})
@@ -278,6 +281,7 @@ def get_reservation_plot_data():
     data = [{"x": x, "y": y} for x, y in zip(X, Y)]
 
     return data
+
 
 def get_ip(name):
     """Use 'name' name fragment to find a single IP (investigador principal)
