@@ -7,8 +7,8 @@ It is very simple, but it has been very useful for me.
 It can be run by:
 
 ```bash
-$ git clone https://github.com/isilanes/WebProjects
-$ cd WebProjects/
+$ git clone https://github.com/isilanes/django-projects
+$ cd django-projects/
 $ git checkout -b v0.1
 $ python -m manage runserver localhost:8081
 ```
