@@ -7,9 +7,10 @@ from datetime import datetime, date
 from dateutil.relativedelta import relativedelta as rdelta
 
 # Constants:
-DISK_PRICE = 0.50 # euros per TB day
-PENALTY_EXPIRED = 1.50 # multiplier for DISK_PRICE over expired periods
-BONUS_BUFFER = 0.50 # multiplier (< 1) for price_disk when in IHBuffer
+DISK_PRICE = 0.50  # euros per TB day
+PENALTY_EXPIRED = 1.50  # multiplier for DISK_PRICE over expired periods
+BONUS_BUFFER = 0.50  # multiplier (< 1) for price_disk when in buffer
+
 
 # Functions:
 def num2eng(num, decimals=2):
@@ -37,10 +38,10 @@ class IP(models.Model):
         """Return x,y, where x = amount of open projects, and y = total
         amount of projects.
         """
-        ntot = len(self.project_set.all())
-        nopen = len([ x for x in self.project_set.all() if not x.finished ])
+        n_total = len(self.project_set.all())
+        n_open = len([x for x in self.project_set.all() if not x.finished])
 
-        return nopen, ntot
+        return n_open, n_total
 
     def get_cpuh(self):
         cpuh_active = 0
@@ -51,7 +52,7 @@ class IP(models.Model):
             if not p.finished:
                 cpuh_active += c
 
-        return [ num2eng(x,1) for x in [ cpuh_active, cpuh_total ] ]
+        return [num2eng(x, 1) for x in [cpuh_active, cpuh_total]]
 
     def get_disk_usage(self):
         gbd_active = 0
@@ -86,7 +87,6 @@ class IP(models.Model):
     def get_open_projs(self):
         return [ x for x in self.project_set.all() if not x.finished ]
 
-
     # Special methods:
     def __unicode__(self):
         return self.ip_name
@@ -94,8 +94,9 @@ class IP(models.Model):
     def __str__(self):
         return self.ip_name
 
+
 class Project(models.Model):
-    ip = models.ForeignKey(IP)
+    ip = models.ForeignKey(IP, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
     user = models.CharField(max_length=20)
     finished = models.BooleanField(default=False)
@@ -360,16 +361,17 @@ class Project(models.Model):
     def __lt__(self, other):
         return self.proj_id < other.proj_id
 
+
 class Period(models.Model):
-    proj = models.ForeignKey(Project)
+    proj = models.ForeignKey(Project, on_delete=models.CASCADE)
     start = models.DateTimeField("Starting date")
     end = models.DateTimeField("Ending date")
     quota = models.FloatField(default=0)
 
     # Whether during this period the project was:
     # active - not expired yet
-    # expired - already expired (still in Neptuno)
-    # frozen - in IHBuffer
+    # expired - already expired (still in cluster)
+    # frozen - in buffer
     status = models.CharField(max_length=25, default="active")
 
     # Public methods:
@@ -409,7 +411,8 @@ class Period(models.Model):
 
     def __str__(self):
         return self.__unicode__()
-    
+
+
 class Reservation(models.Model):
     name = models.CharField("Name of reservation", max_length=50, default="reservation")
     start = models.DateTimeField("Starting date", default=timezone.now)

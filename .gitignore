@@ -5,3 +5,4 @@
 backup/
 *.csv
 /static/
+.idea/
