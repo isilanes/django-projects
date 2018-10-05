@@ -9,7 +9,7 @@ It can be run by:
 ```bash
 $ git clone https://github.com/isilanes/django-projects
 $ cd django-projects/
-$ git checkout -b v0.1
+$ git checkout -b v0.2
 $ python -m manage runserver localhost:8081
 ```
 
