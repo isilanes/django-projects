@@ -12,8 +12,10 @@ cssselect2==0.2.1
 cycler==0.10.0
 dateutils==0.6.6
 defusedxml==0.6.0
-Django==2.2.3
+dj-database-url==0.5.0
+Django==2.2.4
 django-bootstrap3==11.0.0
+django-heroku==0.3.1
 django-model-utils==3.1.2
 django-reset-migrations==0.3.1
 docopt==0.6.2
@@ -33,6 +35,7 @@ numpy==1.15.4
 ordered-set==3.1
 packaging==18.0
 Pillow==5.3.0
+psycopg2==2.8.3
 pycodestyle==2.5.0
 pycparser==2.19
 pyflakes==2.1.1
