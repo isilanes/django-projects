@@ -3,7 +3,7 @@ bokeh==1.0.1
 bs4==0.0.1
 cairocffi==1.0.2
 CairoSVG==2.5.1
-certifi==2018.10.15
+certifi==2022.12.7
 cffi==1.12.3
 chardet==3.0.4
 colorama==0.4.1
