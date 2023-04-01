@@ -43,7 +43,7 @@ pyparsing==2.3.0
 Pyphen==0.9.5
 python-dateutil==2.7.5
 pytz==2018.7
-PyYAML==5.1
+PyYAML==5.4
 radon==3.0.1
 requests==2.22.0
 six==1.11.0
